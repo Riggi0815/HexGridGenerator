@@ -2,10 +2,16 @@ using UnityEngine;
 
 public class HexGridWorldGenerator : MonoBehaviour
 {
+    // Variables for Grid Generation
+    [Header("Hex Grid Generation")]
     [SerializeField] private GameObject hexGridPrefab;
     private int gridNumber = 1;
     private Transform nextGridPosition;
-    
+
+    //HexGridColoring
+    [Header("Hex Grid Coloring")]
+    [SerializeField] private Material blackMaterial;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     public void GenerateStartGrid()
     {
@@ -33,8 +39,20 @@ public class HexGridWorldGenerator : MonoBehaviour
         for (int i = 1; i < hexGrid.transform.childCount; i++)
         {
             Transform child = hexGrid.transform.GetChild(i);
-            child.name = i +"_" + child.name; // Prefixing child names with "1_"
+            child.name = i + "_" + child.name; // Prefixing child names with "1_"
         }
+        ColorHexGrid(hexGrid); // Color the hex grid
+    }
+
+    private void ColorHexGrid(GameObject hexGrid)
+    {
+        // Get all the child renderers and change their colors
+        Renderer[] renderers = hexGrid.GetComponentsInChildren<Renderer>();
+        foreach (Renderer renderer in renderers)
+        {
+            renderer.material = blackMaterial; // Set the material to black
+        }
+        
     }
 }
 
