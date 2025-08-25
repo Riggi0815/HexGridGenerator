@@ -3,21 +3,30 @@ using UnityEngine;
 
 public class GameInitiator : MonoBehaviour
 {
-    [SerializeField] private HexGridWorldGenerator hexGridWorldGenerator;
+    [SerializeField] private HexGridManager hexGridManager;
+    [SerializeField] private PlayerManager playerManager;
     void Start()
     {
         InstantiateObjects();
+        InitializeObjects();
         SpawnObjects();
     }
 
     private void InstantiateObjects()
     {
-        hexGridWorldGenerator = Instantiate(hexGridWorldGenerator);
+        hexGridManager = Instantiate(hexGridManager, gameObject.transform);
+        playerManager = Instantiate(playerManager, gameObject.transform);
+    }
+
+    private void InitializeObjects()
+    {
+        hexGridManager.Initialize();
     }
 
     private void SpawnObjects()
     {
-        hexGridWorldGenerator.GenerateStartGrid();
+        hexGridManager.SpawnHexGrid();
+        playerManager.SpawnPlayer();
     }
 
     }

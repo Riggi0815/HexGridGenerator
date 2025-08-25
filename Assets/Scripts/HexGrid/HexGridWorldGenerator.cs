@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class HexGridWorldGenerator : MonoBehaviour
@@ -8,18 +10,18 @@ public class HexGridWorldGenerator : MonoBehaviour
     private int gridNumber = 1;
     private Transform nextGridPosition;
 
-    //HexGridColoring
-    [Header("Hex Grid Coloring")]
-    [SerializeField] private Material blackMaterial;
+
+    List<HexTileInfo> hexTileInfoList = new List<HexTileInfo>();
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    public void GenerateStartGrid()
+    public List<HexTileInfo> GenerateStartGrid()
     {
         for (int i = 0; i < 5; i++)
         {
             GenerateNewHexGrid();
             gridNumber++;
         }
+        return hexTileInfoList;
     }
 
     private void GenerateNewHexGrid()
@@ -39,20 +41,10 @@ public class HexGridWorldGenerator : MonoBehaviour
         for (int i = 1; i < hexGrid.transform.childCount; i++)
         {
             Transform child = hexGrid.transform.GetChild(i);
-            child.name = i + "_" + child.name; // Prefixing child names with "1_"
+            HexTileInfo hexTileInfo = new HexTileInfo(child.name, child.GetComponent<HexTile>().HexCoordinates, child.position, child.GetComponent<Renderer>());
+            hexTileInfoList.Add(hexTileInfo);
+            child.name = gridNumber + "_" + child.name; // Prefixing child names with "1_"
         }
-        ColorHexGrid(hexGrid); // Color the hex grid
-    }
-
-    private void ColorHexGrid(GameObject hexGrid)
-    {
-        // Get all the child renderers and change their colors
-        Renderer[] renderers = hexGrid.GetComponentsInChildren<Renderer>();
-        foreach (Renderer renderer in renderers)
-        {
-            renderer.material = blackMaterial; // Set the material to black
-        }
-        
     }
 }
 
