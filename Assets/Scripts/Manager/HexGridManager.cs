@@ -32,6 +32,7 @@ public class HexGridManager : MonoBehaviour
             {
                 // Use the hex tile
                 Debug.Log($"Found hex at (2,0): {startingTile.name}");
+                //TODO: Set player start position
             }
             else
             {
