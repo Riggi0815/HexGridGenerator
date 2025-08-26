@@ -9,6 +9,7 @@ public class GameInitiator : MonoBehaviour
     {
         InstantiateObjects();
         InitializeObjects();
+        SetReferences();
         SpawnObjects();
     }
 
@@ -21,6 +22,11 @@ public class GameInitiator : MonoBehaviour
     private void InitializeObjects()
     {
         hexGridManager.Initialize();
+    }
+
+    private void SetReferences()
+    {
+        playerManager.SetReferences(hexGridManager);
     }
 
     private void SpawnObjects()
