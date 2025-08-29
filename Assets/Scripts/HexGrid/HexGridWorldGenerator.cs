@@ -12,16 +12,17 @@ public class HexGridWorldGenerator : MonoBehaviour
 
 
     List<HexTileInfo> hexTileInfoList = new List<HexTileInfo>();
+    public List<HexTileInfo> HexTileInfoList => hexTileInfoList;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    public List<HexTileInfo> GenerateStartGrid()
+    public void GenerateStartGrid()
     {
+        //TODO: If needed Spawn the Hex Grids with a pool for better Performance
         for (int i = 0; i < 5; i++)
         {
             GenerateNewHexGrid();
             gridNumber++;
         }
-        return hexTileInfoList;
     }
 
     private void GenerateNewHexGrid()
@@ -41,9 +42,10 @@ public class HexGridWorldGenerator : MonoBehaviour
         for (int i = 1; i < hexGrid.transform.childCount; i++)
         {
             Transform child = hexGrid.transform.GetChild(i);
+            child.name = gridNumber + "_" + child.name; // Prefixing child names with "1_"
             HexTileInfo hexTileInfo = new HexTileInfo(child.name, child.GetComponent<HexTile>().HexCoordinates, child.position, child.GetComponent<Renderer>());
             hexTileInfoList.Add(hexTileInfo);
-            child.name = gridNumber + "_" + child.name; // Prefixing child names with "1_"
+            
         }
     }
 }

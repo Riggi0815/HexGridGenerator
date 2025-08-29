@@ -4,16 +4,12 @@ public class PlayerManager : MonoBehaviour
 {
 
     [SerializeField] private GameObject playerPrefab;
-    
+
     private HexGridManager hexGridManager;
 
-    public void SetReferences(HexGridManager hexGridManager) {
-        this.hexGridManager = hexGridManager;
-    }
-
-    private void InitializePlayer()
+    public void SetReferences(HexGridManager hexGridManager)
     {
-        // Initialize player-related settings or properties here
+        this.hexGridManager = hexGridManager;
     }
 
     public void SpawnPlayer()
@@ -24,8 +20,10 @@ public class PlayerManager : MonoBehaviour
         HexTileInfo startingHex = hexGridManager.GetHexTileFromHexCoords(hexStartCoordinateQ, hexStartCoordinateR);
         if (startingHex != null)
         {
-            Instantiate(playerPrefab, startingHex.worldPosition + new Vector3(0, 1.15f, 0), Quaternion.identity);
+            GameObject player = Instantiate(playerPrefab, startingHex.worldPosition + new Vector3(0, 1.15f, 0), Quaternion.identity);
+            Debug.Log("Active? " + player.activeInHierarchy);
             Debug.Log($"Player spawned at hex coordinates ({hexStartCoordinateQ}, {hexStartCoordinateR})");
+            player.GetComponent<PlayerMovement>().InitialSetup();
         }
         else
         {

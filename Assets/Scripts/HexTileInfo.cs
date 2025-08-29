@@ -6,6 +6,7 @@ public class HexTileInfo
     public Vector2Int hexCoordinates;
     public Vector3 worldPosition;
     public Renderer hexTileRenderer;
+    public GameObject hexTileGameObject => hexTileRenderer.gameObject;
 
     public HexTileInfo(string name, Vector2Int hexCoords, Vector3 position, Renderer renderer)
     {

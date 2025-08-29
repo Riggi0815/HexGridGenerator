@@ -9,15 +9,24 @@ public class HexGridManager : MonoBehaviour
     [SerializeField] private HexColorManager hexColorManager;
     [SerializeField] private List<HexTileInfo> hexTileInfoList = new List<HexTileInfo>();
 
+    private Vector2Int currentHexTileCoords;
+    public Vector2Int CurrentHexTileCoords
+    {
+        get { return currentHexTileCoords; }
+        set { currentHexTileCoords = value; }
+    }
+
     public void Initialize()
     {
+        Debug.Log("Create GridManager and HexColorManager");
         hexGridWorldGenerator = Instantiate(hexGridWorldGenerator, gameObject.transform);
         hexColorManager = Instantiate(hexColorManager, gameObject.transform);
     }
 
     public void SpawnHexGrid()
     {
-        hexTileInfoList = hexGridWorldGenerator.GenerateStartGrid();
+        hexGridWorldGenerator.GenerateStartGrid();
+        hexTileInfoList = hexGridWorldGenerator.HexTileInfoList;
         hexColorManager.SetInitialColors(hexTileInfoList);
     }
 
@@ -27,6 +36,7 @@ public class HexGridManager : MonoBehaviour
         if (foundTile != null)
         {
             Debug.Log($"Hex found at coordinates ({q}, {r}): {foundTile.name}");
+            currentHexTileCoords = new Vector2Int(q, r);
         }
         else
         {
