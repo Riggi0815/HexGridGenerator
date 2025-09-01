@@ -43,6 +43,8 @@ public class HexGridWorldGenerator : MonoBehaviour
         {
             Transform child = hexGrid.transform.GetChild(i);
             child.name = gridNumber + "_" + child.name; // Prefixing child names with "1_"
+            var newCoord = new Vector3Int(gridNumber, child.GetComponent<HexTile>().HexCoordinates.x, child.GetComponent<HexTile>().HexCoordinates.y);
+            child.GetComponent<HexTile>().SetHexCoordinates(newCoord.x, newCoord.y, newCoord.z);
             HexTileInfo hexTileInfo = new HexTileInfo(child.name, child.GetComponent<HexTile>().HexCoordinates, child.position, child.GetComponent<Renderer>());
             hexTileInfoList.Add(hexTileInfo);
             

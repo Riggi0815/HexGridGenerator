@@ -39,7 +39,7 @@ public class HexGenerator : MonoBehaviour
             {
                 Vector3 position = CalculateHexPosition(x, y);
                 var hexTile = Instantiate(objectToSpawn, position, Quaternion.identity, spawnPosition);
-                hexTile.GetComponent<HexTile>().SetCoordinates(x, y);
+                hexTile.GetComponent<HexTile>().SetHexCoordinates(0, x, y);
                 hexTile.name = $"HexTile_{x}_{y}"; // Optional: name the tile for easier identification
             }
         }

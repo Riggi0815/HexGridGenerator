@@ -1,37 +1,80 @@
+using System.Collections;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
 {
 
-    private PlayerControls playerControls;
+    [SerializeField] private float moveTime = 0.2f;
+    [SerializeField] private Vector3Int currentHexCoords;
 
-    public void InitialSetup()
+    private PlayerControls playerControls;
+    private HexGridManager hexGridManager;
+
+    public void InitialSetup(HexGridManager hexGridManager)
     {
+        this.hexGridManager = hexGridManager;
+        currentHexCoords = hexGridManager.CurrentHexTileCoords;
         playerControls = new PlayerControls();
         playerControls.Gameplay.Enable();
 
-        playerControls.Gameplay.Up.performed += ctx => Move();
-        playerControls.Gameplay.UpperRight.performed += ctx => Move();
-        playerControls.Gameplay.LowerRight.performed += ctx => Move();
-        playerControls.Gameplay.Down.performed += ctx => Move();
-        playerControls.Gameplay.UpperLeft.performed += ctx => Move();
-        playerControls.Gameplay.LowerLeft.performed += ctx => Move();
+        playerControls.Gameplay.Up.performed += ctx => Move(new Vector2Int(0, 1));
+        playerControls.Gameplay.UpperRight.performed += ctx => Move(new Vector2Int(1, 0));
+        playerControls.Gameplay.LowerRight.performed += ctx => Move(new Vector2Int(1, -1));
+        playerControls.Gameplay.Down.performed += ctx => Move(new Vector2Int(0, -1));
+        playerControls.Gameplay.UpperLeft.performed += ctx => Move(new Vector2Int(-1, 0));
+        playerControls.Gameplay.LowerLeft.performed += ctx => Move(new Vector2Int(-1, -1));
     }
 
-    private void Move()
+    private void Move(Vector2Int direction)
     {
-        Debug.Log("Move Player");
+        //even to odd Row Move
+        if(currentHexCoords.y % 2 != 0 && direction.x != 0)
+        {
+            direction.y += 1;
+        }
+
+        //Move Player
+        Vector3Int targetHexTile = currentHexCoords + new Vector3Int(0,direction.x,direction.y);
+        if (targetHexTile.z > 4)
+        {
+            targetHexTile.z = 0;
+            targetHexTile.x += 1;
+        }else if (targetHexTile.z < 0)
+        {
+            targetHexTile.z = 4;
+            targetHexTile.x -= 1;
+        }
+        HexTileInfo targetHex = hexGridManager.GetHexTileFromHexCoords(targetHexTile.x, targetHexTile.y, targetHexTile.z);
+        if (targetHex == null) return;
+        currentHexCoords = targetHexTile;
+        transform.LookAt(new Vector3(targetHex.worldPosition.x, transform.position.y, targetHex.worldPosition.z));
+        StartCoroutine(MoveToHex(new Vector3(targetHex.worldPosition.x, transform.position.y, targetHex.worldPosition.z), moveTime));
+    }
+
+    private IEnumerator MoveToHex(Vector3 targetPosition, float duration)
+    {
+        Vector3 startPosition = transform.position;
+        float elapsed = 0f;
+
+        while (elapsed < duration)
+        {
+            transform.position = Vector3.Lerp(startPosition, targetPosition, elapsed / duration);
+            elapsed += Time.deltaTime;
+            yield return null;
+        }
+
+        transform.position = targetPosition;
     }
 
     void OnDisable()
     {
         playerControls.Gameplay.Disable();
 
-        playerControls.Gameplay.Up.performed -= ctx => Move();
-        playerControls.Gameplay.UpperRight.performed -= ctx => Move();
-        playerControls.Gameplay.LowerRight.performed -= ctx => Move();
-        playerControls.Gameplay.Down.performed -= ctx => Move();
-        playerControls.Gameplay.UpperLeft.performed -= ctx => Move();
-        playerControls.Gameplay.LowerLeft.performed -= ctx => Move();
+        playerControls.Gameplay.Up.performed -= ctx => Move(new Vector2Int(0, 1));
+        playerControls.Gameplay.UpperRight.performed -= ctx => Move(new Vector2Int(1, 0));
+        playerControls.Gameplay.LowerRight.performed -= ctx => Move(new Vector2Int(1, -1));
+        playerControls.Gameplay.Down.performed -= ctx => Move(new Vector2Int(0, -1));
+        playerControls.Gameplay.UpperLeft.performed -= ctx => Move(new Vector2Int(-1, 0));
+        playerControls.Gameplay.LowerLeft.performed -= ctx => Move(new Vector2Int(-1, -1));
     }
 }

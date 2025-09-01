@@ -3,11 +3,11 @@ using UnityEngine;
 public class HexTile : MonoBehaviour
 {
 
-    public Vector2Int hexCoordinates;
-    public Vector2Int HexCoordinates => hexCoordinates;
+    public Vector3Int hexCoordinates;
+    public Vector3Int HexCoordinates => hexCoordinates;
 
-    public void SetCoordinates(int x, int y)
+    public void SetHexCoordinates(int x, int y, int z)
     {
-        hexCoordinates = new Vector2Int(x, y);
+        hexCoordinates = new Vector3Int(x, y, z);
     }
 }
