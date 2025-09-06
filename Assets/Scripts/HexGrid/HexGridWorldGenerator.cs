@@ -10,23 +10,26 @@ public class HexGridWorldGenerator : MonoBehaviour
     private int gridNumber = 1;
     private Transform nextGridPosition;
 
+    List<HexTileInfo> hexGridTilesList = new List<HexTileInfo>();
+
 
     List<HexTileInfo> hexTileInfoList = new List<HexTileInfo>();
     public List<HexTileInfo> HexTileInfoList => hexTileInfoList;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    public void GenerateStartGrid()
+    public void GenerateStartGrid(HexColorManager hexColorManager)
     {
+
         //TODO: If needed Spawn the Hex Grids with a pool for better Performance
         for (int i = 0; i < 5; i++)
         {
-            GenerateNewHexGrid();
-            gridNumber++;
+            GenerateNewHexGrid(hexColorManager);
         }
     }
 
-    private void GenerateNewHexGrid()
+    private void GenerateNewHexGrid(HexColorManager hexColorManager)
     {
+        hexGridTilesList.Clear();
         // Instantiate the hex grid prefab
         GameObject hexGrid = Instantiate(hexGridPrefab, gameObject.transform);
         if (gridNumber == 1)
@@ -46,9 +49,10 @@ public class HexGridWorldGenerator : MonoBehaviour
             var newCoord = new Vector3Int(gridNumber, child.GetComponent<HexTile>().HexCoordinates.x, child.GetComponent<HexTile>().HexCoordinates.y);
             child.GetComponent<HexTile>().SetHexCoordinates(newCoord.x, newCoord.y, newCoord.z);
             HexTileInfo hexTileInfo = new HexTileInfo(child.name, child.GetComponent<HexTile>().HexCoordinates, child.position, child.GetComponent<Renderer>());
-            hexTileInfoList.Add(hexTileInfo);
-            
+            hexGridTilesList.Add(hexTileInfo);
         }
+        hexTileInfoList.AddRange(hexColorManager.SetInitialGridColors(hexGridTilesList, gridNumber));
+        gridNumber++;
     }
 }
 

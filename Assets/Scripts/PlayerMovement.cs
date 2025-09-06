@@ -4,8 +4,9 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
 
-    [SerializeField] private float moveTime = 0.2f;
+    [SerializeField] private float moveTime = 0.3f;
     [SerializeField] private Vector3Int currentHexCoords;
+    private bool canMove = true;
 
     private PlayerControls playerControls;
     private HexGridManager hexGridManager;
@@ -27,8 +28,11 @@ public class PlayerMovement : MonoBehaviour
 
     private void Move(Vector2Int direction)
     {
+        if (!canMove) return;
+
+        canMove = false;
         //even to odd Row Move
-        if(currentHexCoords.y % 2 != 0 && direction.x != 0)
+        if (currentHexCoords.y % 2 != 0 && direction.x != 0)
         {
             direction.y += 1;
         }
@@ -64,6 +68,7 @@ public class PlayerMovement : MonoBehaviour
         }
 
         transform.position = targetPosition;
+        canMove = true;
     }
 
     void OnDisable()

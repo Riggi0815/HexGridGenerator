@@ -26,9 +26,8 @@ public class HexGridManager : MonoBehaviour
 
     public void SpawnHexGrid()
     {
-        hexGridWorldGenerator.GenerateStartGrid();
+        hexGridWorldGenerator.GenerateStartGrid(hexColorManager);
         hexTileInfoList = hexGridWorldGenerator.HexTileInfoList;
-        hexColorManager.SetInitialColors(hexTileInfoList);
     }
 
     public HexTileInfo GetHexTileFromHexCoords(int gridNumber, int q, int r)
