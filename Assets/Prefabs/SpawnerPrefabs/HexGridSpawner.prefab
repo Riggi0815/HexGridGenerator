@@ -44,5 +44,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0e35ea333c25cb3479658725a74974cb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hexGridPrefab: {fileID: 7734619879382767532, guid: afbaab98206bf204fba91d0124b66df2, type: 3}
-  blackMaterial: {fileID: 2100000, guid: f45e527e79a54b34da3a0c29d43c4229, type: 2}
+  hexGridPrefab: {fileID: 5989598664566394573, guid: afbaab98206bf204fba91d0124b66df2, type: 3}

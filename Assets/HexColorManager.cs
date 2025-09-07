@@ -19,6 +19,7 @@ public class HexColorManager : MonoBehaviour
     private int safeHexCount = 3; // Number of safe hexes per grid
     List<HexTileInfo> safeHexes = new List<HexTileInfo>();
 
+
     public List<HexTileInfo> SetInitialGridColors(List<HexTileInfo> hexTileGridInfoList, int gridNumber)
     {
         List<HexTileInfo> hexListCopy = new List<HexTileInfo>(hexTileGridInfoList);
@@ -26,7 +27,7 @@ public class HexColorManager : MonoBehaviour
         this.gridNumber = gridNumber;
         if (gridNumber == 1)
         {
-            int[] array = new int[] { 1, 5, 10, 15, 20 };
+            int[] array = new int[] { 0, 10, 20, 30, 40 };
             for (int i = 0; i < array.Length; i++)
             {
                 HexTileInfo safeHex = hexListCopy[array[i]];
@@ -66,6 +67,10 @@ public class HexColorManager : MonoBehaviour
             whiteHex.hexTileRenderer.material = whiteMaterial;
         }
 
+        for (int i = 0; i < hexTileGridInfoList.Count; i++)
+        {
+            Debug.Log(hexTileGridInfoList[i].name);
+        }
         return hexTileGridInfoList;
     }
 }

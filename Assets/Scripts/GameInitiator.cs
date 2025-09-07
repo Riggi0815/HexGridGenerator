@@ -5,6 +5,7 @@ public class GameInitiator : MonoBehaviour
 {
     [SerializeField] private HexGridManager hexGridManager;
     [SerializeField] private PlayerManager playerManager;
+    private HexColorManager hexColorManager;
     void Start()
     {
         Debug.Log("Initiate Game");
@@ -24,7 +25,7 @@ public class GameInitiator : MonoBehaviour
     private void InitializeObjects()
     {
         Debug.Log("Initialize GameObjects");
-        hexGridManager.Initialize();
+        hexColorManager = hexGridManager.Initialize();
     }
 
     private void SetReferences()

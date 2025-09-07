@@ -8,7 +8,6 @@ public class PlayerManager : MonoBehaviour
     private HexGridManager hexGridManager;
 
 
-
     public void SetReferences(HexGridManager hexGridManager)
     {
         this.hexGridManager = hexGridManager;

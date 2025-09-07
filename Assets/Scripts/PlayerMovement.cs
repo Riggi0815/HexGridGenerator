@@ -38,18 +38,24 @@ public class PlayerMovement : MonoBehaviour
         }
 
         //Move Player
-        Vector3Int targetHexTile = currentHexCoords + new Vector3Int(0,direction.x,direction.y);
-        if (targetHexTile.z > 4)
+        Vector3Int targetHexTile = currentHexCoords + new Vector3Int(0, direction.x, direction.y);
+        if (targetHexTile.z > 9)
         {
             targetHexTile.z = 0;
             targetHexTile.x += 1;
-        }else if (targetHexTile.z < 0)
+        }
+        else if (targetHexTile.z < 0)
         {
-            targetHexTile.z = 4;
+            targetHexTile.z = 9;
             targetHexTile.x -= 1;
         }
         HexTileInfo targetHex = hexGridManager.GetHexTileFromHexCoords(targetHexTile.x, targetHexTile.y, targetHexTile.z);
-        if (targetHex == null) return;
+        Debug.Log("called1");
+        if (targetHex == null) {
+            canMove = true;
+            return;
+        }
+        Debug.Log("called2");
         currentHexCoords = targetHexTile;
         transform.LookAt(new Vector3(targetHex.worldPosition.x, transform.position.y, targetHex.worldPosition.z));
         StartCoroutine(MoveToHex(new Vector3(targetHex.worldPosition.x, transform.position.y, targetHex.worldPosition.z), moveTime));
@@ -81,5 +87,27 @@ public class PlayerMovement : MonoBehaviour
         playerControls.Gameplay.Down.performed -= ctx => Move(new Vector2Int(0, -1));
         playerControls.Gameplay.UpperLeft.performed -= ctx => Move(new Vector2Int(-1, 0));
         playerControls.Gameplay.LowerLeft.performed -= ctx => Move(new Vector2Int(-1, -1));
+    }
+
+    private void ColorCheck()
+    {
+        HexTileInfo targetHex = hexGridManager.GetHexTileFromHexCoords(currentHexCoords.x, currentHexCoords.y, currentHexCoords.z);
+        if (targetHex != null)
+        {
+            if (targetHex.hexTileRenderer.material.name.Contains("White"))
+            {
+                Debug.Log("Player on White Hex - Game Over");
+                Destroy(gameObject);
+            }
+        }
+    }
+
+    void FixedUpdate()
+    {
+        if (canMove)
+        {
+            Debug.Log("Player on Hex: " + currentHexCoords);
+            ColorCheck();
+        }
     }
 }

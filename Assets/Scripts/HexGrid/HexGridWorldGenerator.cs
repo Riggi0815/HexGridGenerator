@@ -19,7 +19,7 @@ public class HexGridWorldGenerator : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     public void GenerateStartGrid(HexColorManager hexColorManager)
     {
-
+        
         //TODO: If needed Spawn the Hex Grids with a pool for better Performance
         for (int i = 0; i < 5; i++)
         {
@@ -42,11 +42,12 @@ public class HexGridWorldGenerator : MonoBehaviour
         }
         hexGrid.name = "HexGrid" + gridNumber;
         nextGridPosition = hexGrid.transform.GetChild(0); // Assuming the first child is the spawn position
+        Debug.Log("Next Grid Position: " + nextGridPosition.name);
         for (int i = 1; i < hexGrid.transform.childCount; i++)
         {
             Transform child = hexGrid.transform.GetChild(i);
             child.name = gridNumber + "_" + child.name; // Prefixing child names with "1_"
-            var newCoord = new Vector3Int(gridNumber, child.GetComponent<HexTile>().HexCoordinates.x, child.GetComponent<HexTile>().HexCoordinates.y);
+            var newCoord = new Vector3Int(gridNumber, child.GetComponent<HexTile>().HexCoordinates.y, child.GetComponent<HexTile>().HexCoordinates.z);
             child.GetComponent<HexTile>().SetHexCoordinates(newCoord.x, newCoord.y, newCoord.z);
             HexTileInfo hexTileInfo = new HexTileInfo(child.name, child.GetComponent<HexTile>().HexCoordinates, child.position, child.GetComponent<Renderer>());
             hexGridTilesList.Add(hexTileInfo);
