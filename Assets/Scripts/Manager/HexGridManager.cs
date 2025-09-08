@@ -9,7 +9,7 @@ public class HexGridManager : MonoBehaviour
     [SerializeField] private HexColorManager hexColorManager;
     [SerializeField] private List<HexTileInfo> hexTileInfoList;
 
-    [SerializeField]private Vector3Int currentHexTileCoords;
+    [SerializeField] private Vector3Int currentHexTileCoords;
     public Vector3Int CurrentHexTileCoords
     {
         get { return currentHexTileCoords; }
@@ -29,6 +29,7 @@ public class HexGridManager : MonoBehaviour
     {
         hexGridWorldGenerator.GenerateStartGrid(hexColorManager);
         hexTileInfoList = hexGridWorldGenerator.HexTileInfoList;
+        StartColorChangeCycle();
     }
 
     public HexTileInfo GetHexTileFromHexCoords(int gridNumber, int q, int r)
@@ -44,5 +45,11 @@ public class HexGridManager : MonoBehaviour
             Debug.LogError($"No hex found at coordinates ({gridNumber}, {q}, {r})");
         }
         return foundTile;
+    }
+    
+    private void StartColorChangeCycle()
+    {
+        Debug.Log("Start Color Change Cycle");
+        hexColorManager.StartColorChangeCycle(hexTileInfoList);
     }
 }

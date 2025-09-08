@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -15,9 +16,16 @@ public class HexColorManager : MonoBehaviour
     [SerializeField] private Material permaWhiteMaterial;
     [SerializeField] private Material permaBlackMaterial;
 
+    [Header("Timing Settings")]
+    [SerializeField] private float colorChangeCycleInterval; // Time between color changes
+    [SerializeField] private bool isColorCycleActive = false; // Duration of color transition
+    private Coroutine colorCycleCoroutine;
+
     private int gridNumber;
     private int safeHexCount = 3; // Number of safe hexes per grid
     List<HexTileInfo> safeHexes = new List<HexTileInfo>();
+
+    List<List<HexTileInfo>> hexGridList = new List<List<HexTileInfo>>();
 
 
     public List<HexTileInfo> SetInitialGridColors(List<HexTileInfo> hexTileGridInfoList, int gridNumber)
@@ -71,6 +79,73 @@ public class HexColorManager : MonoBehaviour
         {
             Debug.Log(hexTileGridInfoList[i].name);
         }
+
+        hexGridList.Add(hexTileGridInfoList);
+
         return hexTileGridInfoList;
+    }
+
+    public void StartColorChangeCycle(List<HexTileInfo> hexTileInfoList)
+    {
+        if (colorCycleCoroutine != null)
+        {
+            StopCoroutine(colorCycleCoroutine);
+        }
+
+        for (int i = 0; i < hexGridList.Count; i++)
+        {
+            for (int j = 0; j < hexGridList[i].Count; j++)
+            {
+                Debug.Log($"Grid {i + 1} - Hex: {hexGridList[i][j].name}, Material: {hexGridList[i][j].hexTileRenderer.material.name}");
+                //TODO: Start color change cycle for hexes
+            }
+        }
+        //isColorCycleActive = true;
+        //colorCycleCoroutine = StartCoroutine(ColorChangeCycleRoutine(hexTileInfoList));
+    }
+
+    public void StopColorChangeCycle()
+    {
+        if (colorCycleCoroutine != null)
+        {
+            StopCoroutine(colorCycleCoroutine);
+            colorCycleCoroutine = null;
+        }
+        isColorCycleActive = false;
+    }
+
+    private IEnumerator ColorChangeCycleRoutine(List<HexTileInfo> hexTileInfoList)
+    {
+        while (isColorCycleActive)
+        {
+            yield return new WaitForSeconds(colorChangeCycleInterval);
+
+            List<HexTileInfo> hexesToChange = new List<HexTileInfo>();
+            foreach (var hex in hexTileInfoList)
+            {
+                if (!safeHexes.Contains(hex))
+                {
+                    hexesToChange.Add(hex);
+                }
+            }
+
+            if (hexesToChange.Count == 0)
+            {
+                Debug.LogWarning("No hexes available for color change.");
+                continue;
+            }
+
+            int randomIndex = Random.Range(0, hexesToChange.Count);
+            HexTileInfo selectedHex = hexesToChange[randomIndex];
+
+            if (selectedHex.hexTileRenderer.material == blackMaterial)
+            {
+                //StartCoroutine(TransitionColor(selectedHex, blackToWhiteMaterial, whiteMaterial));
+            }
+            else if (selectedHex.hexTileRenderer.material == whiteMaterial)
+            {
+                //StartCoroutine(TransitionColor(selectedHex, whiteToBlackMaterial, blackMaterial));
+            }
+        }
     }
 }

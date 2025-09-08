@@ -12,6 +12,8 @@ public class HexGridWorldGenerator : MonoBehaviour
 
     List<HexTileInfo> hexGridTilesList = new List<HexTileInfo>();
 
+    private List<List<HexTileInfo>> hexGridList = new List<List<HexTileInfo>>();
+    public List<List<HexTileInfo>> HexGridList => hexGridList;
 
     List<HexTileInfo> hexTileInfoList = new List<HexTileInfo>();
     public List<HexTileInfo> HexTileInfoList => hexTileInfoList;
@@ -53,6 +55,7 @@ public class HexGridWorldGenerator : MonoBehaviour
             hexGridTilesList.Add(hexTileInfo);
         }
         hexTileInfoList.AddRange(hexColorManager.SetInitialGridColors(hexGridTilesList, gridNumber));
+
         gridNumber++;
     }
 }
