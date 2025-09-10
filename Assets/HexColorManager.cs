@@ -25,7 +25,7 @@ public class HexColorManager : MonoBehaviour
     private int safeHexCount = 3; // Number of safe hexes per grid
     List<HexTileInfo> safeHexes = new List<HexTileInfo>();
 
-    List<List<HexTileInfo>> hexGridList = new List<List<HexTileInfo>>();
+    public List<List<HexTileInfo>> hexGridList = new List<List<HexTileInfo>>();
 
 
     public List<HexTileInfo> SetInitialGridColors(List<HexTileInfo> hexTileGridInfoList, int gridNumber)
@@ -80,12 +80,13 @@ public class HexColorManager : MonoBehaviour
             Debug.Log(hexTileGridInfoList[i].name);
         }
 
-        hexGridList.Add(hexTileGridInfoList);
+        List<HexTileInfo> hexTileGridInfoListCopy = new List<HexTileInfo>(hexTileGridInfoList);
+        hexGridList.Add(hexTileGridInfoListCopy);
 
         return hexTileGridInfoList;
     }
 
-    public void StartColorChangeCycle(List<HexTileInfo> hexTileInfoList)
+    public void StartColorChangeCycle()
     {
         if (colorCycleCoroutine != null)
         {
@@ -100,52 +101,27 @@ public class HexColorManager : MonoBehaviour
                 //TODO: Start color change cycle for hexes
             }
         }
-        //isColorCycleActive = true;
-        //colorCycleCoroutine = StartCoroutine(ColorChangeCycleRoutine(hexTileInfoList));
+        isColorCycleActive = true;
+        colorCycleCoroutine = StartCoroutine(ColorChangeCycleRoutine());
     }
 
-    public void StopColorChangeCycle()
-    {
-        if (colorCycleCoroutine != null)
-        {
-            StopCoroutine(colorCycleCoroutine);
-            colorCycleCoroutine = null;
-        }
-        isColorCycleActive = false;
-    }
-
-    private IEnumerator ColorChangeCycleRoutine(List<HexTileInfo> hexTileInfoList)
+    private IEnumerator ColorChangeCycleRoutine()
     {
         while (isColorCycleActive)
         {
             yield return new WaitForSeconds(colorChangeCycleInterval);
 
-            List<HexTileInfo> hexesToChange = new List<HexTileInfo>();
-            foreach (var hex in hexTileInfoList)
+            Debug.Log(hexGridList.Count);
+            for (int i = 0; i < hexGridList.Count; i++)
             {
-                if (!safeHexes.Contains(hex))
+                for (int j = 0; j < hexGridList[i].Count; j++)
                 {
-                    hexesToChange.Add(hex);
+                    //Debug.Log($"Grid {i + 1} - Hex: {hexGridList[i][j].name}, Material: {hexGridList[i][j].hexTileRenderer.material.name}");
                 }
             }
-
-            if (hexesToChange.Count == 0)
-            {
-                Debug.LogWarning("No hexes available for color change.");
-                continue;
-            }
-
-            int randomIndex = Random.Range(0, hexesToChange.Count);
-            HexTileInfo selectedHex = hexesToChange[randomIndex];
-
-            if (selectedHex.hexTileRenderer.material == blackMaterial)
-            {
-                //StartCoroutine(TransitionColor(selectedHex, blackToWhiteMaterial, whiteMaterial));
-            }
-            else if (selectedHex.hexTileRenderer.material == whiteMaterial)
-            {
-                //StartCoroutine(TransitionColor(selectedHex, whiteToBlackMaterial, blackMaterial));
-            }
+            isColorCycleActive = false;
         }
     }
 }
+
+

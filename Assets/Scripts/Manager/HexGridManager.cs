@@ -29,7 +29,7 @@ public class HexGridManager : MonoBehaviour
     {
         hexGridWorldGenerator.GenerateStartGrid(hexColorManager);
         hexTileInfoList = hexGridWorldGenerator.HexTileInfoList;
-        StartColorChangeCycle();
+        StartColorCycle();
     }
 
     public HexTileInfo GetHexTileFromHexCoords(int gridNumber, int q, int r)
@@ -47,9 +47,9 @@ public class HexGridManager : MonoBehaviour
         return foundTile;
     }
     
-    private void StartColorChangeCycle()
+    private void StartColorCycle()
     {
         Debug.Log("Start Color Change Cycle");
-        hexColorManager.StartColorChangeCycle(hexTileInfoList);
+        hexColorManager.StartColorChangeCycle();
     }
 }

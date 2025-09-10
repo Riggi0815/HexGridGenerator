@@ -50,12 +50,10 @@ public class PlayerMovement : MonoBehaviour
             targetHexTile.x -= 1;
         }
         HexTileInfo targetHex = hexGridManager.GetHexTileFromHexCoords(targetHexTile.x, targetHexTile.y, targetHexTile.z);
-        Debug.Log("called1");
         if (targetHex == null) {
             canMove = true;
             return;
         }
-        Debug.Log("called2");
         currentHexCoords = targetHexTile;
         transform.LookAt(new Vector3(targetHex.worldPosition.x, transform.position.y, targetHex.worldPosition.z));
         StartCoroutine(MoveToHex(new Vector3(targetHex.worldPosition.x, transform.position.y, targetHex.worldPosition.z), moveTime));
@@ -106,7 +104,6 @@ public class PlayerMovement : MonoBehaviour
     {
         if (canMove)
         {
-            Debug.Log("Player on Hex: " + currentHexCoords);
             ColorCheck();
         }
     }

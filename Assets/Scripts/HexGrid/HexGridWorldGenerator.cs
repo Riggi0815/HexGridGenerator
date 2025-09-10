@@ -21,12 +21,13 @@ public class HexGridWorldGenerator : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     public void GenerateStartGrid(HexColorManager hexColorManager)
     {
-        
+
         //TODO: If needed Spawn the Hex Grids with a pool for better Performance
         for (int i = 0; i < 5; i++)
         {
             GenerateNewHexGrid(hexColorManager);
         }
+        Debug.Log("Hex Generation Complete");
     }
 
     private void GenerateNewHexGrid(HexColorManager hexColorManager)
@@ -53,6 +54,7 @@ public class HexGridWorldGenerator : MonoBehaviour
             child.GetComponent<HexTile>().SetHexCoordinates(newCoord.x, newCoord.y, newCoord.z);
             HexTileInfo hexTileInfo = new HexTileInfo(child.name, child.GetComponent<HexTile>().HexCoordinates, child.position, child.GetComponent<Renderer>());
             hexGridTilesList.Add(hexTileInfo);
+            Debug.Log("Hex Tile Added: " + child.name + " with coordinates " + newCoord);
         }
         hexTileInfoList.AddRange(hexColorManager.SetInitialGridColors(hexGridTilesList, gridNumber));
 

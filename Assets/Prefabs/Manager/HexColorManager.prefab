@@ -50,3 +50,5 @@ MonoBehaviour:
   whiteToBlackMaterial: {fileID: 2100000, guid: 534b69ef486c53d4bb502616c43119e4, type: 2}
   permaWhiteMaterial: {fileID: 2100000, guid: 53ffe362b11ff5549b1b5f47bfdb0d58, type: 2}
   permaBlackMaterial: {fileID: 2100000, guid: e878d01160efe3a42927a2f8a93642c4, type: 2}
+  colorChangeCycleInterval: 5
+  isColorCycleActive: 0
