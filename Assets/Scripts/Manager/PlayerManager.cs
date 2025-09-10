@@ -13,7 +13,7 @@ public class PlayerManager : MonoBehaviour
         this.hexGridManager = hexGridManager;
     }
 
-    public void SpawnPlayer()
+    public GameObject SpawnPlayer()
     {
         int hexStartCoordinateQ = 2;
         int hexStartCoordinateR = 0;
@@ -25,11 +25,14 @@ public class PlayerManager : MonoBehaviour
             Debug.Log("Active? " + player.activeInHierarchy);
             Debug.Log($"Player spawned at hex coordinates ({hexStartCoordinateQ}, {hexStartCoordinateR})");
             player.GetComponent<PlayerMovement>().InitialSetup(hexGridManager);
+            return player;
         }
         else
         {
             Debug.LogError($"No hex found at coordinates ({hexStartCoordinateQ}, {hexStartCoordinateR}). Player not spawned.");
+            return null;
         }
+        
     }
 
 }

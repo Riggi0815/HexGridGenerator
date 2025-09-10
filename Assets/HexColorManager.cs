@@ -86,6 +86,15 @@ public class HexColorManager : MonoBehaviour
         return hexTileGridInfoList;
     }
 
+    public void StopColorChangeCycle()
+    {
+        if (colorCycleCoroutine != null)
+        {
+            StopCoroutine(colorCycleCoroutine);
+            colorCycleCoroutine = null;
+        }
+    }
+
     public void StartColorChangeCycle()
     {
         if (colorCycleCoroutine != null)
@@ -98,7 +107,6 @@ public class HexColorManager : MonoBehaviour
             for (int j = 0; j < hexGridList[i].Count; j++)
             {
                 Debug.Log($"Grid {i + 1} - Hex: {hexGridList[i][j].name}, Material: {hexGridList[i][j].hexTileRenderer.material.name}");
-                //TODO: Start color change cycle for hexes
             }
         }
         isColorCycleActive = true;
@@ -112,14 +120,35 @@ public class HexColorManager : MonoBehaviour
             yield return new WaitForSeconds(colorChangeCycleInterval);
 
             Debug.Log(hexGridList.Count);
+
             for (int i = 0; i < hexGridList.Count; i++)
             {
-                for (int j = 0; j < hexGridList[i].Count; j++)
+                int amountHexesToChange = hexGridList[i].Count / 2;
+                List<HexTileInfo> hexesToChange = new List<HexTileInfo>();
+
+                for (int j = 0; j < amountHexesToChange; j++)
                 {
-                    //Debug.Log($"Grid {i + 1} - Hex: {hexGridList[i][j].name}, Material: {hexGridList[i][j].hexTileRenderer.material.name}");
+                    int randomIndex = Random.Range(0, hexGridList[i].Count);
+                    HexTileInfo hexToChange = hexGridList[i][randomIndex];
+
+                    if (safeHexes.Contains(hexToChange)|| hexesToChange.Contains(hexToChange))
+                    {
+                        // Skip safe hexes
+                        j--;
+                        continue;
+                    }
+
+                    if (hexToChange.hexTileRenderer.material.color == blackMaterial.color)
+                    {
+                        hexToChange.hexTileRenderer.material = whiteMaterial;
+                    }
+                    else if (hexToChange.hexTileRenderer.material.color == whiteMaterial.color)
+                    {
+                        hexToChange.hexTileRenderer.material = blackMaterial;
+                    }
                 }
             }
-            isColorCycleActive = false;
+            
         }
     }
 }
