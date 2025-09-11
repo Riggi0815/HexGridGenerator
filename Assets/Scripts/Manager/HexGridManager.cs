@@ -9,11 +9,11 @@ public class HexGridManager : MonoBehaviour
     [SerializeField] private HexColorManager hexColorManager;
     [SerializeField] private List<HexTileInfo> hexTileInfoList;
 
-    [SerializeField] private Vector3Int currentHexTileCoords;
-    public Vector3Int CurrentHexTileCoords
+    [SerializeField] private HexTileInfo currentHexTile;
+    public HexTileInfo CurrentHexTile
     {
-        get { return currentHexTileCoords; }
-        set { currentHexTileCoords = value; }
+        get { return currentHexTile; }
+        set { currentHexTile = value; }
     }
 
     public HexColorManager Initialize()
@@ -38,7 +38,7 @@ public class HexGridManager : MonoBehaviour
         if (foundTile != null)
         {
             //Debug.Log($"Hex found at coordinates ({gridNumber}, {q}, {r}): {foundTile.name}");
-            currentHexTileCoords = new Vector3Int(foundTile.hexCoordinates.x, foundTile.hexCoordinates.y, foundTile.hexCoordinates.z);
+            currentHexTile = foundTile;
         }
         else
         {

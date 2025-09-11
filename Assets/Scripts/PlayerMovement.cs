@@ -5,7 +5,7 @@ public class PlayerMovement : MonoBehaviour
 {
 
     [SerializeField] private float moveTime = 0.3f;
-    [SerializeField] private Vector3Int currentHexCoords;
+    [SerializeField] private HexTileInfo currentHexTile;
     private bool canMove = true;
 
     private PlayerControls playerControls;
@@ -14,7 +14,7 @@ public class PlayerMovement : MonoBehaviour
     public void InitialSetup(HexGridManager hexGridManager)
     {
         this.hexGridManager = hexGridManager;
-        currentHexCoords = hexGridManager.CurrentHexTileCoords;
+        currentHexTile = hexGridManager.CurrentHexTile;
         playerControls = new PlayerControls();
         playerControls.Gameplay.Enable();
 
@@ -32,13 +32,13 @@ public class PlayerMovement : MonoBehaviour
 
         canMove = false;
         //even to odd Row Move
-        if (currentHexCoords.y % 2 != 0 && direction.x != 0)
+        if (currentHexTile.hexCoordinates.y % 2 != 0 && direction.x != 0)
         {
             direction.y += 1;
         }
 
         //Move Player
-        Vector3Int targetHexTile = currentHexCoords + new Vector3Int(0, direction.x, direction.y);
+        Vector3Int targetHexTile = currentHexTile.hexCoordinates + new Vector3Int(0, direction.x, direction.y);
         if (targetHexTile.z > 9)
         {
             targetHexTile.z = 0;
@@ -54,7 +54,7 @@ public class PlayerMovement : MonoBehaviour
             canMove = true;
             return;
         }
-        currentHexCoords = targetHexTile;
+        currentHexTile = targetHex;
         transform.LookAt(new Vector3(targetHex.worldPosition.x, transform.position.y, targetHex.worldPosition.z));
         StartCoroutine(MoveToHex(new Vector3(targetHex.worldPosition.x, transform.position.y, targetHex.worldPosition.z), moveTime));
     }
@@ -89,12 +89,12 @@ public class PlayerMovement : MonoBehaviour
 
     private void ColorCheck()
     {
-        HexTileInfo targetHex = hexGridManager.GetHexTileFromHexCoords(currentHexCoords.x, currentHexCoords.y, currentHexCoords.z);
+        HexTileInfo targetHex = currentHexTile;
         if (targetHex != null)
         {
-            if (targetHex.hexTileRenderer.material.name.Contains("White"))
+            if (targetHex.hexTileRenderer.sharedMaterial.color.grayscale > 0.6f && !targetHex.hexTileGameObject.GetComponent<HexTile>().IsSafe)
             {
-                Debug.Log("Player on White Hex - Game Over");
+                Debug.Log("Player on White Hex - Game Over" + targetHex.hexTileRenderer.sharedMaterial.color.grayscale + " IsSafe: " + targetHex.hexTileGameObject.GetComponent<HexTile>().IsSafe);
                 Destroy(gameObject);
             }
         }

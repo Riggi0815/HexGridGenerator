@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 
 public class HexColorManager : MonoBehaviour
@@ -20,6 +21,7 @@ public class HexColorManager : MonoBehaviour
     [SerializeField] private float colorChangeCycleInterval; // Time between color changes
     [SerializeField] private bool isColorCycleActive = false; // Duration of color transition
     private Coroutine colorCycleCoroutine;
+    List<Task> transitions = new List<Task>();
 
     private int gridNumber;
     private int safeHexCount = 3; // Number of safe hexes per grid
@@ -40,6 +42,7 @@ public class HexColorManager : MonoBehaviour
             {
                 HexTileInfo safeHex = hexListCopy[array[i]];
                 safeHex.hexTileRenderer.material = permaBlackMaterial;
+                safeHex.hexTileGameObject.GetComponent<HexTile>().IsSafe = true;
                 safeHexes.Add(safeHex);
             }
             // Remove the elements at the specified indices (from highest to lowest to avoid shifting)
@@ -56,6 +59,7 @@ public class HexColorManager : MonoBehaviour
             HexTileInfo safeHex = hexListCopy[randomIndex];
             safeHex.hexTileRenderer.material = permaBlackMaterial;
             safeHexes.Add(safeHex);
+            safeHex.hexTileGameObject.GetComponent<HexTile>().IsSafe = true;
             hexListCopy.RemoveAt(randomIndex); // Remove to avoid selecting the same hex again
         }
 
@@ -117,9 +121,14 @@ public class HexColorManager : MonoBehaviour
     {
         while (isColorCycleActive)
         {
+
             yield return new WaitForSeconds(colorChangeCycleInterval);
 
-            Debug.Log(hexGridList.Count);
+            List<Task> transitionTasks = new List<Task>();
+
+            List<Renderer> hexesToChangeToBlack = new List<Renderer>();
+            List<Renderer> hexesToChangeToWhite = new List<Renderer>();
+
 
             for (int i = 0; i < hexGridList.Count; i++)
             {
@@ -131,26 +140,67 @@ public class HexColorManager : MonoBehaviour
                     int randomIndex = Random.Range(0, hexGridList[i].Count);
                     HexTileInfo hexToChange = hexGridList[i][randomIndex];
 
-                    if (safeHexes.Contains(hexToChange)|| hexesToChange.Contains(hexToChange))
+                    if (safeHexes.Contains(hexToChange) || hexesToChange.Contains(hexToChange))
                     {
                         // Skip safe hexes
                         j--;
                         continue;
                     }
-
-                    if (hexToChange.hexTileRenderer.material.color == blackMaterial.color)
+                    else
                     {
-                        hexToChange.hexTileRenderer.material = whiteMaterial;
-                    }
-                    else if (hexToChange.hexTileRenderer.material.color == whiteMaterial.color)
-                    {
-                        hexToChange.hexTileRenderer.material = blackMaterial;
+                        hexesToChange.Add(hexToChange);
+                        if (hexToChange.hexTileRenderer.material.color == blackMaterial.color)
+                        {
+                            hexesToChangeToWhite.Add(hexToChange.hexTileRenderer);
+                        }
+                        else if (hexToChange.hexTileRenderer.material.color == whiteMaterial.color)
+                        {
+                            hexesToChangeToBlack.Add(hexToChange.hexTileRenderer);
+                        }
                     }
                 }
             }
+
+            // Starte die Übergänge
+            Task blackToWhiteTask = TransitionColor(hexesToChangeToBlack, whiteMaterial, whiteToBlackMaterial, blackMaterial);
+            Task whiteToBlackTask = TransitionColor(hexesToChangeToWhite, blackMaterial, blackToWhiteMaterial, whiteMaterial);
+
+            // Warte bis beide Übergänge abgeschlossen sind
+            yield return new WaitUntil(() => blackToWhiteTask.IsCompleted && whiteToBlackTask.IsCompleted);
+
             
         }
     }
+
+    private async Task TransitionColor(List<Renderer> hexRenderers, Material startMaterial, Material transitionMaterial, Material targetMaterial)
+    {
+        Material sharedMaterial = transitionMaterial;
+        // Change to transition material
+        foreach (var hexRenderer in hexRenderers)
+        {
+            hexRenderer.sharedMaterial = sharedMaterial;
+        }
+
+        // Lerp the color over time
+        float duration = 3.0f;
+        float elapsed = 0.0f;
+
+        while (elapsed < duration)
+        {
+            float t = elapsed / duration;
+            sharedMaterial.color = Color.Lerp(startMaterial.color, targetMaterial.color, t);
+            elapsed += Time.deltaTime;
+            await Task.Yield();
+        }
+
+        foreach (var hexRenderer in hexRenderers)
+        {
+            hexRenderer.material = targetMaterial;
+            transitionMaterial.color = startMaterial.color; // Reset transition material color
+        }
+
+    
+}
 }
 
 
