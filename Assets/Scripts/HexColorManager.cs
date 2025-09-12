@@ -90,6 +90,14 @@ public class HexColorManager : MonoBehaviour
         return hexTileGridInfoList;
     }
 
+    public void RemoveFirstGridFromList()
+    {
+        if (hexGridList.Count > 0)
+        {
+            hexGridList.RemoveAt(0);
+        }
+    }
+
     public void StopColorChangeCycle()
     {
         if (colorCycleCoroutine != null)
@@ -149,6 +157,7 @@ public class HexColorManager : MonoBehaviour
                     else
                     {
                         hexesToChange.Add(hexToChange);
+                        Debug.Log(hexToChange.hexTileGameObject.name);
                         if (hexToChange.hexTileRenderer.material.color == blackMaterial.color)
                         {
                             hexesToChangeToWhite.Add(hexToChange.hexTileRenderer);

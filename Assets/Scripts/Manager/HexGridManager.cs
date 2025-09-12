@@ -46,6 +46,14 @@ public class HexGridManager : MonoBehaviour
         }
         return foundTile;
     }
+
+    public void CheckIfNewGridNeeded(HexTileInfo targetHex)
+    {
+        if (targetHex.hexCoordinates.x == hexTileInfoList.Last().hexCoordinates.x - 1)
+        {
+            hexGridWorldGenerator.SpawnAndDeleteGrid();
+        }
+    }
     
     private void StartColorCycle()
     {

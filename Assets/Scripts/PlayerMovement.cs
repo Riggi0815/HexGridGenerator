@@ -50,13 +50,15 @@ public class PlayerMovement : MonoBehaviour
             targetHexTile.x -= 1;
         }
         HexTileInfo targetHex = hexGridManager.GetHexTileFromHexCoords(targetHexTile.x, targetHexTile.y, targetHexTile.z);
-        if (targetHex == null) {
+        if (targetHex == null)
+        {
             canMove = true;
             return;
         }
         currentHexTile = targetHex;
         transform.LookAt(new Vector3(targetHex.worldPosition.x, transform.position.y, targetHex.worldPosition.z));
         StartCoroutine(MoveToHex(new Vector3(targetHex.worldPosition.x, transform.position.y, targetHex.worldPosition.z), moveTime));
+        hexGridManager.CheckIfNewGridNeeded(targetHex); 
     }
 
     private IEnumerator MoveToHex(Vector3 targetPosition, float duration)
@@ -95,7 +97,7 @@ public class PlayerMovement : MonoBehaviour
             if (targetHex.hexTileRenderer.sharedMaterial.color.grayscale > 0.6f && !targetHex.hexTileGameObject.GetComponent<HexTile>().IsSafe)
             {
                 Debug.Log("Player on White Hex - Game Over" + targetHex.hexTileRenderer.sharedMaterial.color.grayscale + " IsSafe: " + targetHex.hexTileGameObject.GetComponent<HexTile>().IsSafe);
-                Destroy(gameObject);
+                //Destroy(gameObject);
             }
         }
     }
