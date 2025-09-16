@@ -16,6 +16,9 @@ public class HexGridManager : MonoBehaviour
         set { currentHexTile = value; }
     }
 
+    public bool newGridNeeded = false;
+    public bool NewGridNeeded { get { return newGridNeeded; } set { newGridNeeded = value; } }
+
     public HexColorManager Initialize()
     {
         Debug.Log("Create GridManager and HexColorManager");
@@ -51,6 +54,7 @@ public class HexGridManager : MonoBehaviour
     {
         if (targetHex.hexCoordinates.x == hexTileInfoList.Last().hexCoordinates.x - 1)
         {
+            newGridNeeded = true;
             hexGridWorldGenerator.SpawnAndDeleteGrid();
         }
     }
@@ -58,6 +62,6 @@ public class HexGridManager : MonoBehaviour
     private void StartColorCycle()
     {
         Debug.Log("Start Color Change Cycle");
-        hexColorManager.StartColorChangeCycle();
+        hexColorManager.StartColorChangeCycle(this, hexGridWorldGenerator);
     }
 }

@@ -69,18 +69,23 @@ public class HexGridWorldGenerator : MonoBehaviour
 
     public void SpawnAndDeleteGrid()
     {
-        Destroy(hexGridObjectList[0]);
-        hexGridObjectList.RemoveAt(0);
+        Debug.Log(hexColorManager.IsTransitioning);
+        if (!hexColorManager.IsTransitioning)
+        {
+            Destroy(hexGridObjectList[0]);
+            hexGridObjectList.RemoveAt(0);
+
+
+            Debug.Log(hexGridList.Count);
+            hexGridList.RemoveAt(0);
+
+            hexColorManager.RemoveFirstGridFromList();
+
+            Debug.Log(hexGridList.Count);
+            hexTileInfoList.RemoveAll(tile => tile.hexCoordinates.x == gridNumber - 4);
+            GenerateNewHexGrid(hexColorManager);
+        }
         
-
-        Debug.Log(hexGridList.Count);
-        hexGridList.RemoveAt(0);
-
-        hexColorManager.RemoveFirstGridFromList();
-
-        Debug.Log(hexGridList.Count);
-        hexTileInfoList.RemoveAll(tile => tile.hexCoordinates.x == gridNumber - 4);
-        GenerateNewHexGrid(hexColorManager);
     }
 }
 

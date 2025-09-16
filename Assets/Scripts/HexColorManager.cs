@@ -20,11 +20,15 @@ public class HexColorManager : MonoBehaviour
     [Header("Timing Settings")]
     [SerializeField] private float colorChangeCycleInterval; // Time between color changes
     [SerializeField] private bool isColorCycleActive = false; // Duration of color transition
+    private bool isTransitioning = false; // Flag to prevent overlapping transitions
+    public bool IsTransitioning => isTransitioning;
     private Coroutine colorCycleCoroutine;
     List<Task> transitions = new List<Task>();
 
     private int gridNumber;
     private int safeHexCount = 3; // Number of safe hexes per grid
+    private HexGridManager hexGridManager;
+    private HexGridWorldGenerator hexGridWorldGenerator;
     List<HexTileInfo> safeHexes = new List<HexTileInfo>();
 
     public List<List<HexTileInfo>> hexGridList = new List<List<HexTileInfo>>();
@@ -107,7 +111,7 @@ public class HexColorManager : MonoBehaviour
         }
     }
 
-    public void StartColorChangeCycle()
+    public void StartColorChangeCycle(HexGridManager hexGridManager, HexGridWorldGenerator hexGridWorldGenerator)
     {
         if (colorCycleCoroutine != null)
         {
@@ -183,6 +187,7 @@ public class HexColorManager : MonoBehaviour
 
     private async Task TransitionColor(List<Renderer> hexRenderers, Material startMaterial, Material transitionMaterial, Material targetMaterial)
     {
+        isTransitioning = true;
         Material sharedMaterial = transitionMaterial;
         // Change to transition material
         foreach (var hexRenderer in hexRenderers)
@@ -208,6 +213,14 @@ public class HexColorManager : MonoBehaviour
             transitionMaterial.color = startMaterial.color; // Reset transition material color
         }
 
+        isTransitioning = false;
+        if (hexGridManager.NewGridNeeded)
+        {
+            Debug.Log("Hello");
+            hexGridWorldGenerator.SpawnAndDeleteGrid();
+            hexGridManager.NewGridNeeded = false;
+            
+        }
     
 }
 }
