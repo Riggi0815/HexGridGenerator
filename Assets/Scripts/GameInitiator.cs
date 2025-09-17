@@ -36,7 +36,7 @@ public class GameInitiator : MonoBehaviour
     private void SetReferences()
     {
         Debug.Log("Function to Set needed References");
-        playerManager.SetReferences(hexGridManager);
+        playerManager.SetReferences(hexGridManager, hexColorManager);
         
     }
 

@@ -161,7 +161,6 @@ public class HexColorManager : MonoBehaviour
                     else
                     {
                         hexesToChange.Add(hexToChange);
-                        Debug.Log(hexToChange.hexTileGameObject.name);
                         if (hexToChange.hexTileRenderer.material.color == blackMaterial.color)
                         {
                             hexesToChangeToWhite.Add(hexToChange.hexTileRenderer);
@@ -181,11 +180,11 @@ public class HexColorManager : MonoBehaviour
             // Warte bis beide Übergänge abgeschlossen sind
             yield return new WaitUntil(() => blackToWhiteTask.IsCompleted && whiteToBlackTask.IsCompleted);
 
-            
+
         }
     }
 
-    private async Task TransitionColor(List<Renderer> hexRenderers, Material startMaterial, Material transitionMaterial, Material targetMaterial)
+    public async Task TransitionColor(List<Renderer> hexRenderers, Material startMaterial, Material transitionMaterial, Material targetMaterial)
     {
         isTransitioning = true;
         Material sharedMaterial = transitionMaterial;
@@ -214,9 +213,9 @@ public class HexColorManager : MonoBehaviour
         }
 
         isTransitioning = false;
-        
-    
-}
+    }
+
+
 }
 
 

@@ -1,4 +1,5 @@
 using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
@@ -10,10 +11,13 @@ public class PlayerMovement : MonoBehaviour
 
     private PlayerControls playerControls;
     private HexGridManager hexGridManager;
+    private HexColorManager hexColorManager;
+    private Coroutine standingCoroutine;
 
-    public void InitialSetup(HexGridManager hexGridManager)
+    public void InitialSetup(HexGridManager hexGridManager , HexColorManager hexColorManager)
     {
         this.hexGridManager = hexGridManager;
+        this.hexColorManager = hexColorManager;
         currentHexTile = hexGridManager.CurrentHexTile;
         playerControls = new PlayerControls();
         playerControls.Gameplay.Enable();
@@ -58,8 +62,9 @@ public class PlayerMovement : MonoBehaviour
         currentHexTile = targetHex;
         transform.LookAt(new Vector3(targetHex.worldPosition.x, transform.position.y, targetHex.worldPosition.z));
         StartCoroutine(MoveToHex(new Vector3(targetHex.worldPosition.x, transform.position.y, targetHex.worldPosition.z), moveTime));
-        hexGridManager.CheckIfNewGridNeeded(targetHex); 
+        hexGridManager.CheckIfNewGridNeeded(targetHex);
     }
+
 
     private IEnumerator MoveToHex(Vector3 targetPosition, float duration)
     {
@@ -97,7 +102,7 @@ public class PlayerMovement : MonoBehaviour
             if (targetHex.hexTileRenderer.sharedMaterial.color.grayscale > 0.6f && !targetHex.hexTileGameObject.GetComponent<HexTile>().IsSafe)
             {
                 Debug.Log("Player on White Hex - Game Over" + targetHex.hexTileRenderer.sharedMaterial.color.grayscale + " IsSafe: " + targetHex.hexTileGameObject.GetComponent<HexTile>().IsSafe);
-                //Destroy(gameObject);
+                Destroy(gameObject);
             }
         }
     }

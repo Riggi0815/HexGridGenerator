@@ -6,11 +6,13 @@ public class PlayerManager : MonoBehaviour
     [SerializeField] private GameObject playerPrefab;
 
     private HexGridManager hexGridManager;
+    private HexColorManager hexColorManager;
 
 
-    public void SetReferences(HexGridManager hexGridManager)
+    public void SetReferences(HexGridManager hexGridManager , HexColorManager hexColorManager)
     {
         this.hexGridManager = hexGridManager;
+        this.hexColorManager = hexColorManager;
     }
 
     public GameObject SpawnPlayer()
@@ -24,7 +26,7 @@ public class PlayerManager : MonoBehaviour
             GameObject player = Instantiate(playerPrefab, startingHex.worldPosition + new Vector3(0, 1.15f, 0), Quaternion.identity);
             Debug.Log("Active? " + player.activeInHierarchy);
             Debug.Log($"Player spawned at hex coordinates ({hexStartCoordinateQ}, {hexStartCoordinateR})");
-            player.GetComponent<PlayerMovement>().InitialSetup(hexGridManager);
+            player.GetComponent<PlayerMovement>().InitialSetup(hexGridManager, hexColorManager);
             return player;
         }
         else
