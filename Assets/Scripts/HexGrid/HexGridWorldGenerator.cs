@@ -20,14 +20,16 @@ public class HexGridWorldGenerator : MonoBehaviour
     public List<HexTileInfo> HexTileInfoList => hexTileInfoList;
 
     private HexColorManager hexColorManager;
+    private HexGridManager hexGridManager;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
-    public void GenerateStartGrid(HexColorManager hexColorManager)
+    public void GenerateStartGrid(HexColorManager hexColorManager , HexGridManager hexGridManager)
     {
         this.hexColorManager = hexColorManager;
+        this.hexGridManager = hexGridManager;
 
         //TODO: If needed Spawn the Hex Grids with a pool for better Performance
-        for (int i = 0; i < 5; i++)
+        for (int i = 0; i < 7; i++)
         {
             GenerateNewHexGrid(this.hexColorManager);
         }
@@ -66,6 +68,14 @@ public class HexGridWorldGenerator : MonoBehaviour
 
         gridNumber++;
     }
+    
+    private void Update() {
+        if (!hexColorManager.IsTransitioning && hexGridManager.NewGridNeeded)
+        {
+            SpawnAndDeleteGrid();
+            hexGridManager.NewGridNeeded = false;
+        }
+    }
 
     public void SpawnAndDeleteGrid()
     {
@@ -82,10 +92,10 @@ public class HexGridWorldGenerator : MonoBehaviour
             hexColorManager.RemoveFirstGridFromList();
 
             Debug.Log(hexGridList.Count);
-            hexTileInfoList.RemoveAll(tile => tile.hexCoordinates.x == gridNumber - 4);
+            hexTileInfoList.RemoveAll(tile => tile.hexCoordinates.x == gridNumber - 6);
             GenerateNewHexGrid(hexColorManager);
         }
-        
+
     }
 }
 

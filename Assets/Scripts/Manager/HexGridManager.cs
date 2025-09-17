@@ -30,7 +30,7 @@ public class HexGridManager : MonoBehaviour
 
     public void SpawnHexGrid()
     {
-        hexGridWorldGenerator.GenerateStartGrid(hexColorManager);
+        hexGridWorldGenerator.GenerateStartGrid(hexColorManager, this);
         hexTileInfoList = hexGridWorldGenerator.HexTileInfoList;
         StartColorCycle();
     }
@@ -52,10 +52,9 @@ public class HexGridManager : MonoBehaviour
 
     public void CheckIfNewGridNeeded(HexTileInfo targetHex)
     {
-        if (targetHex.hexCoordinates.x == hexTileInfoList.Last().hexCoordinates.x - 1)
+        if (targetHex.hexCoordinates.x == hexTileInfoList.Last().hexCoordinates.x - 3)
         {
-            newGridNeeded = true;
-            hexGridWorldGenerator.SpawnAndDeleteGrid();
+            NewGridNeeded = true;
         }
     }
     

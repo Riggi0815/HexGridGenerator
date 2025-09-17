@@ -214,13 +214,7 @@ public class HexColorManager : MonoBehaviour
         }
 
         isTransitioning = false;
-        if (hexGridManager.NewGridNeeded)
-        {
-            Debug.Log("Hello");
-            hexGridWorldGenerator.SpawnAndDeleteGrid();
-            hexGridManager.NewGridNeeded = false;
-            
-        }
+        
     
 }
 }
