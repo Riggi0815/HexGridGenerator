@@ -30,6 +30,9 @@ public class HexColorManager : MonoBehaviour
     private HexGridManager hexGridManager;
     private HexGridWorldGenerator hexGridWorldGenerator;
     List<HexTileInfo> safeHexes = new List<HexTileInfo>();
+    List<HexTileInfo> hexesToChange = new List<HexTileInfo>();
+    List<Renderer> hexesToChangeToBlack = new List<Renderer>();
+    List<Renderer> hexesToChangeToWhite = new List<Renderer>();
 
     public List<List<HexTileInfo>> hexGridList = new List<List<HexTileInfo>>();
 
@@ -111,6 +114,12 @@ public class HexColorManager : MonoBehaviour
         }
     }
 
+    public void PlayerStandingOnHexColor(HexTileInfo hexTileInfo)
+    {
+        hexesToChange.Add(hexTileInfo);
+        hexesToChangeToWhite.Add(hexTileInfo.hexTileRenderer);
+    }
+
     public void StartColorChangeCycle(HexGridManager hexGridManager, HexGridWorldGenerator hexGridWorldGenerator)
     {
         if (colorCycleCoroutine != null)
@@ -138,14 +147,11 @@ public class HexColorManager : MonoBehaviour
 
             List<Task> transitionTasks = new List<Task>();
 
-            List<Renderer> hexesToChangeToBlack = new List<Renderer>();
-            List<Renderer> hexesToChangeToWhite = new List<Renderer>();
-
 
             for (int i = 0; i < hexGridList.Count; i++)
             {
                 int amountHexesToChange = hexGridList[i].Count / 2;
-                List<HexTileInfo> hexesToChange = new List<HexTileInfo>();
+
 
                 for (int j = 0; j < amountHexesToChange; j++)
                 {
@@ -179,7 +185,9 @@ public class HexColorManager : MonoBehaviour
 
             // Warte bis beide Übergänge abgeschlossen sind
             yield return new WaitUntil(() => blackToWhiteTask.IsCompleted && whiteToBlackTask.IsCompleted);
-
+            hexesToChange.Clear();
+            hexesToChangeToBlack.Clear();
+            hexesToChangeToWhite.Clear();
 
         }
     }

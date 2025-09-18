@@ -63,6 +63,18 @@ public class PlayerMovement : MonoBehaviour
         transform.LookAt(new Vector3(targetHex.worldPosition.x, transform.position.y, targetHex.worldPosition.z));
         StartCoroutine(MoveToHex(new Vector3(targetHex.worldPosition.x, transform.position.y, targetHex.worldPosition.z), moveTime));
         hexGridManager.CheckIfNewGridNeeded(targetHex);
+        if (standingCoroutine != null)
+        {
+            StopCoroutine(standingCoroutine);
+        }
+        standingCoroutine = StartCoroutine(PlayerStandingOnHex());
+    }
+
+    private IEnumerator PlayerStandingOnHex()
+    {
+        yield return new WaitForSeconds(3f);
+        hexColorManager.PlayerStandingOnHexColor(currentHexTile);
+        standingCoroutine = null;
     }
 
 
