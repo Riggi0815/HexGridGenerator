@@ -13,6 +13,7 @@ GameObject:
   - component: {fileID: 5941864361029080618}
   - component: {fileID: 4946493946824363768}
   - component: {fileID: -4320456156124668236}
+  - component: {fileID: 5632794353518280237}
   m_Layer: 0
   m_Name: TriggerPlane
   m_TagString: Untagged
@@ -103,11 +104,11 @@ MeshCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 5
-  m_Convex: 0
+  m_Convex: 1
   m_CookingOptions: 30
   m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
 --- !u!114 &-4320456156124668236
@@ -122,3 +123,32 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ebda79487dde61145ba05b07554ea9c7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  followSpeed: 2
+  triggerDistance: 15
+--- !u!54 &5632794353518280237
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1187713958375616082}
+  serializedVersion: 4
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: 0.05
+  m_CenterOfMass: {x: 0, y: 0, z: 0}
+  m_InertiaTensor: {x: 1, y: 1, z: 1}
+  m_InertiaRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ImplicitCom: 1
+  m_ImplicitTensor: 1
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 0
+  m_CollisionDetection: 0

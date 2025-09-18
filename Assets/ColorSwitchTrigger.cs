@@ -21,7 +21,6 @@ public class ColorSwitchTrigger : MonoBehaviour
         if (playerMovement.FirstMoveDone && player != null)
         {
             float currentDistance = Mathf.Abs(transform.position.z - player.transform.position.z);
-            Debug.Log(currentDistance);
             
             if (currentDistance > triggerDistance)
             {
@@ -33,5 +32,10 @@ public class ColorSwitchTrigger : MonoBehaviour
             }
         }
 
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        Debug.Log(other.gameObject.name);
     }
 }

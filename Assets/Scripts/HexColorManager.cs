@@ -134,14 +134,6 @@ public class HexColorManager : MonoBehaviour
         {
             StopCoroutine(colorCycleCoroutine);
         }
-
-        for (int i = 0; i < hexGridList.Count; i++)
-        {
-            for (int j = 0; j < hexGridList[i].Count; j++)
-            {
-                Debug.Log($"Grid {i + 1} - Hex: {hexGridList[i][j].name}, Material: {hexGridList[i][j].hexTileRenderer.material.name}");
-            }
-        }
         isColorCycleActive = true;
         colorCycleCoroutine = StartCoroutine(ColorChangeCycleRoutine());
     }
