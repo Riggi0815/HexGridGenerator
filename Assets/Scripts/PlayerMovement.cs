@@ -8,6 +8,8 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float moveTime = 0.3f;
     [SerializeField] private HexTileInfo currentHexTile;
     private bool canMove = true;
+    private bool firstMoveDone = false;
+    public bool FirstMoveDone => firstMoveDone;
 
     private PlayerControls playerControls;
     private HexGridManager hexGridManager;
@@ -32,6 +34,7 @@ public class PlayerMovement : MonoBehaviour
 
     private void Move(Vector2Int direction)
     {
+        if (!firstMoveDone) firstMoveDone = true;
         if (!canMove) return;
 
         canMove = false;

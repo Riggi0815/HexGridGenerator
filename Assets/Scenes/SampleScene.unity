@@ -677,6 +677,7 @@ MonoBehaviour:
   hexGridManager: {fileID: 3339722477790685111, guid: ce8df1b1d7ed63c47a68d809d3319048, type: 3}
   playerManager: {fileID: 2127320734911060640, guid: e7fb56bfa9c8ac7489ff5bf78041cc77, type: 3}
   cameraFollow: {fileID: 3440536138974612508, guid: a90fb877d4a279544984e5d863b70b61, type: 3}
+  colorSwitchTrigger: {fileID: -4320456156124668236, guid: 73ee3791428685242b621d8aa0c10143, type: 3}
 --- !u!4 &1007204919
 Transform:
   m_ObjectHideFlags: 0

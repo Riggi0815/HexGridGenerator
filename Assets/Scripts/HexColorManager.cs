@@ -116,8 +116,16 @@ public class HexColorManager : MonoBehaviour
 
     public void PlayerStandingOnHexColor(HexTileInfo hexTileInfo)
     {
-        hexesToChange.Add(hexTileInfo);
-        hexesToChangeToWhite.Add(hexTileInfo.hexTileRenderer);
+        if (safeHexes.Contains(hexTileInfo) || hexesToChange.Contains(hexTileInfo))
+        {
+            return; // Skip safe hexes
+        }
+        else
+        {
+            hexesToChange.Add(hexTileInfo);
+            hexesToChangeToWhite.Add(hexTileInfo.hexTileRenderer);
+        }
+        
     }
 
     public void StartColorChangeCycle(HexGridManager hexGridManager, HexGridWorldGenerator hexGridWorldGenerator)
@@ -221,6 +229,11 @@ public class HexColorManager : MonoBehaviour
         }
 
         isTransitioning = false;
+    }
+
+    public void ChangeColorPermanently()
+    {
+        
     }
 
 
