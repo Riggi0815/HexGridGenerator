@@ -33,6 +33,7 @@ public class GameInitiator : MonoBehaviour
     {
         Debug.Log("Initialize GameObjects");
         hexColorManager = hexGridManager.Initialize();
+        colorSwitchTrigger.SetReferences(hexColorManager);
         cameraFollow.Initialize();
     }
 

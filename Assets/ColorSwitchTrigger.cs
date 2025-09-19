@@ -5,8 +5,8 @@ public class ColorSwitchTrigger : MonoBehaviour
 {
     GameObject player;
     PlayerMovement playerMovement;
+    HexColorManager hexColorManager;
 
-    [SerializeField] private float followSpeed = 2f;
     [SerializeField] private float triggerDistance = 15f;
 
     public void InitializePlane(GameObject player, PlayerMovement playerMovement)
@@ -26,16 +26,18 @@ public class ColorSwitchTrigger : MonoBehaviour
             {
                 transform.position = new Vector3(transform.position.x, transform.position.y, player.transform.position.z - triggerDistance);
             }
-            else
-            {
-                transform.position = Vector3.MoveTowards(transform.position, new Vector3(transform.position.x, transform.position.y, player.transform.position.z), followSpeed * Time.deltaTime);
-            }
+            
         }
 
     }
 
+    public void SetReferences(HexColorManager hexColorManager)
+    {
+        this.hexColorManager = hexColorManager;
+    }
+
     private void OnTriggerEnter(Collider other)
     {
-        Debug.Log(other.gameObject.name);
+        hexColorManager.ChangeColorPermanently(other.gameObject);
     }
 }

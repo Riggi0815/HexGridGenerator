@@ -86,10 +86,7 @@ public class HexColorManager : MonoBehaviour
             whiteHex.hexTileRenderer.material = whiteMaterial;
         }
 
-        for (int i = 0; i < hexTileGridInfoList.Count; i++)
-        {
-            Debug.Log(hexTileGridInfoList[i].name);
-        }
+        
 
         List<HexTileInfo> hexTileGridInfoListCopy = new List<HexTileInfo>(hexTileGridInfoList);
         hexGridList.Add(hexTileGridInfoListCopy);
@@ -157,16 +154,16 @@ public class HexColorManager : MonoBehaviour
                 {
                     int randomIndex = Random.Range(0, hexGridList[i].Count);
                     HexTileInfo hexToChange = hexGridList[i][randomIndex];
-
-                    if (safeHexes.Contains(hexToChange) || hexesToChange.Contains(hexToChange))
+                    
+                    if (safeHexes.Contains(hexToChange) || hexesToChange.Contains(hexToChange) || hexToChange.hexTileGameObject.GetComponent<HexTile>().IsWhite)
                     {
-                        // Skip safe hexes
-                        j--;
+                        
                         continue;
                     }
                     else
                     {
                         hexesToChange.Add(hexToChange);
+                        
                         if (hexToChange.hexTileRenderer.material.color == blackMaterial.color)
                         {
                             hexesToChangeToWhite.Add(hexToChange.hexTileRenderer);
@@ -223,9 +220,14 @@ public class HexColorManager : MonoBehaviour
         isTransitioning = false;
     }
 
-    public void ChangeColorPermanently()
+
+
+    public void ChangeColorPermanently(GameObject hexTile)
     {
+        Renderer hexRenderer = hexTile.GetComponent<Renderer>();
         
+        hexRenderer.material = permaWhiteMaterial;
+        hexTile.GetComponent<HexTile>().IsWhite = true;
     }
 
 
