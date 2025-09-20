@@ -23,7 +23,7 @@ public class PlayerManager : MonoBehaviour
         HexTileInfo startingHex = hexGridManager.GetHexTileFromHexCoords(1, hexStartCoordinateQ, hexStartCoordinateR);
         if (startingHex != null)
         {
-            GameObject player = Instantiate(playerPrefab, startingHex.worldPosition + new Vector3(0, 1.15f, 0), Quaternion.identity);
+            GameObject player = Instantiate(playerPrefab, startingHex.worldPosition + new Vector3(0, 1.59f, 0), Quaternion.identity);
             Debug.Log("Active? " + player.activeInHierarchy);
             Debug.Log($"Player spawned at hex coordinates ({hexStartCoordinateQ}, {hexStartCoordinateR})");
             player.GetComponent<PlayerMovement>().InitialSetup(hexGridManager, hexColorManager);

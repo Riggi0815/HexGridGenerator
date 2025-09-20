@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -7,7 +8,7 @@ public class PlayerMovement : MonoBehaviour
 
     [SerializeField] private float moveTime = 0.3f;
     [SerializeField] private HexTileInfo currentHexTile;
-    private bool canMove = true;
+    [SerializeField] private bool canMove = true;
     private bool firstMoveDone = false;
     public bool FirstMoveDone => firstMoveDone;
 
@@ -15,13 +16,30 @@ public class PlayerMovement : MonoBehaviour
     private HexGridManager hexGridManager;
     private HexColorManager hexColorManager;
     private Coroutine standingCoroutine;
+    private Animator animator;
+    private string currentAnimation = "";
 
-    public void InitialSetup(HexGridManager hexGridManager , HexColorManager hexColorManager)
+    public void InitialSetup(HexGridManager hexGridManager, HexColorManager hexColorManager)
     {
         this.hexGridManager = hexGridManager;
         this.hexColorManager = hexColorManager;
         currentHexTile = hexGridManager.CurrentHexTile;
         playerControls = new PlayerControls();
+
+        animator = GetComponentInChildren<Animator>();
+        AnimationClip clip = FindAnimationClip("metarig|Jump_Neu");
+        if (clip != null) {
+            float originalDuration = clip.length;
+            float speedmultiplier = originalDuration / moveTime;
+            animator.SetFloat("Speedmultiplier", speedmultiplier);
+        } else {
+            Debug.LogError("Jump animation clip not found!");
+            // Set a default value if clip isn't found
+            animator.SetFloat("Speedmultiplier", 1.0f);
+        }
+        //TODO: Careful. If the moveTime changes during gameplay, the speed multiplier won't update.
+        ChangeAnimation("Idle");
+
         playerControls.Gameplay.Enable();
 
         playerControls.Gameplay.Up.performed += ctx => Move(new Vector2Int(0, 1));
@@ -71,6 +89,42 @@ public class PlayerMovement : MonoBehaviour
             StopCoroutine(standingCoroutine);
         }
         standingCoroutine = StartCoroutine(PlayerStandingOnHex());
+    }
+
+    public void ChangeAnimation(string newAnimation)
+    {
+        if (currentAnimation == newAnimation) return;
+
+        currentAnimation = newAnimation;
+        animator.Play(newAnimation);
+        
+    }
+
+    private void CheckAnimation()
+    {
+
+        if (canMove)
+        {
+            ChangeAnimation("Idle");
+        }
+        else
+        {
+            ChangeAnimation("Jump");
+        }
+    }
+
+    private AnimationClip FindAnimationClip(string animationName)
+    {
+        
+        foreach (AnimationClip  clip in animator.runtimeAnimatorController.animationClips)
+        {
+            Debug.Log("Clip found: " + clip.name);
+            if (clip.name == animationName)
+            {
+                return clip;
+            }
+        }
+        return null;
     }
 
     private IEnumerator PlayerStandingOnHex()
@@ -124,6 +178,8 @@ public class PlayerMovement : MonoBehaviour
 
     void FixedUpdate()
     {
+        CheckAnimation();
+
         if (canMove)
         {
             ColorCheck();
