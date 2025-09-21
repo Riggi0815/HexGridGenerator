@@ -27,16 +27,18 @@ public class PlayerMovement : MonoBehaviour
         playerControls = new PlayerControls();
 
         animator = GetComponentInChildren<Animator>();
-        AnimationClip clip = FindAnimationClip("metarig|Jump_Neu");
-        if (clip != null) {
-            float originalDuration = clip.length;
-            float speedmultiplier = originalDuration / moveTime;
-            animator.SetFloat("Speedmultiplier", speedmultiplier);
-        } else {
-            Debug.LogError("Jump animation clip not found!");
-            // Set a default value if clip isn't found
-            animator.SetFloat("Speedmultiplier", 1.0f);
-        }
+        /**
+            AnimationClip clip = FindAnimationClip("metarig|Jump_Neu");
+            if (clip != null) {
+                float originalDuration = clip.length;
+                float speedmultiplier = originalDuration / moveTime;
+                animator.SetFloat("Speedmultiplier", speedmultiplier);
+            } else {
+                Debug.LogError("Jump animation clip not found!");
+                // Set a default value if clip isn't found
+                animator.SetFloat("Speedmultiplier", 1.0f);
+            }
+            **/
         //TODO: Careful. If the moveTime changes during gameplay, the speed multiplier won't update.
         ChangeAnimation("Idle");
 
