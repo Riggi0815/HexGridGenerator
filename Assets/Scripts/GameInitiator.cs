@@ -1,4 +1,4 @@
-using System;
+
 using UnityEngine;
 
 public class GameInitiator : MonoBehaviour
@@ -10,9 +10,11 @@ public class GameInitiator : MonoBehaviour
     private PlayerMovement playerMovement;
     private HexColorManager hexColorManager;
     private GameObject player;
+    private SceneLoader sceneLoader;
 
     void Start()
     {
+        sceneLoader = FindFirstObjectByType<SceneLoader>();
         Debug.Log("Initiate Game");
         InstantiateObjects();
         InitializeObjects();
@@ -40,7 +42,7 @@ public class GameInitiator : MonoBehaviour
     private void SetReferences()
     {
         Debug.Log("Function to Set needed References");
-        playerManager.SetReferences(hexGridManager, hexColorManager);
+        playerManager.SetReferences(hexGridManager, hexColorManager, sceneLoader);
         
     }
 

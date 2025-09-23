@@ -3,16 +3,17 @@ using UnityEngine;
 public class PlayerManager : MonoBehaviour
 {
 
-    [SerializeField] private GameObject playerPrefab;
 
     private HexGridManager hexGridManager;
     private HexColorManager hexColorManager;
+    private SceneLoader sceneLoader;
 
 
-    public void SetReferences(HexGridManager hexGridManager , HexColorManager hexColorManager)
+    public void SetReferences(HexGridManager hexGridManager, HexColorManager hexColorManager, SceneLoader sceneLoader)
     {
         this.hexGridManager = hexGridManager;
         this.hexColorManager = hexColorManager;
+        this.sceneLoader = sceneLoader;
     }
 
     public GameObject SpawnPlayer()
@@ -23,7 +24,7 @@ public class PlayerManager : MonoBehaviour
         HexTileInfo startingHex = hexGridManager.GetHexTileFromHexCoords(1, hexStartCoordinateQ, hexStartCoordinateR);
         if (startingHex != null)
         {
-            GameObject player = Instantiate(playerPrefab, startingHex.worldPosition + new Vector3(0, 1.59f, 0), Quaternion.identity);
+            GameObject player = Instantiate(sceneLoader.PlayerObject, startingHex.worldPosition + new Vector3(0, 1.59f, 0), Quaternion.identity);
             Debug.Log("Active? " + player.activeInHierarchy);
             Debug.Log($"Player spawned at hex coordinates ({hexStartCoordinateQ}, {hexStartCoordinateR})");
             player.GetComponent<PlayerMovement>().InitialSetup(hexGridManager, hexColorManager);
