@@ -26,20 +26,8 @@ public class PlayerMovement : MonoBehaviour
         currentHexTile = hexGridManager.CurrentHexTile;
         playerControls = new PlayerControls();
 
-        animator = GetComponentInChildren<Animator>();
-        /**
-            AnimationClip clip = FindAnimationClip("metarig|Jump_Neu");
-            if (clip != null) {
-                float originalDuration = clip.length;
-                float speedmultiplier = originalDuration / moveTime;
-                animator.SetFloat("Speedmultiplier", speedmultiplier);
-            } else {
-                Debug.LogError("Jump animation clip not found!");
-                // Set a default value if clip isn't found
-                animator.SetFloat("Speedmultiplier", 1.0f);
-            }
-            **/
-        //TODO: Careful. If the moveTime changes during gameplay, the speed multiplier won't update.
+        ChangeAnimationSpeed();
+
         ChangeAnimation("Idle");
 
         playerControls.Gameplay.Enable();
@@ -50,6 +38,22 @@ public class PlayerMovement : MonoBehaviour
         playerControls.Gameplay.Down.performed += ctx => Move(new Vector2Int(0, -1));
         playerControls.Gameplay.UpperLeft.performed += ctx => Move(new Vector2Int(-1, 0));
         playerControls.Gameplay.LowerLeft.performed += ctx => Move(new Vector2Int(-1, -1));
+    }
+
+    public void ChangeAnimationSpeed()
+    {
+        animator = GetComponentInChildren<Animator>();
+        
+        AnimationClip clip = FindAnimationClip("PawnJump");
+        if (clip != null) {
+            float originalDuration = clip.length;
+            float speedmultiplier = originalDuration / moveTime;
+            animator.SetFloat("Speedmultiplier", speedmultiplier);
+        } else {
+            Debug.LogError("Jump animation clip not found!");
+            // Set a default value if clip isn't found
+            animator.SetFloat("Speedmultiplier", 1.0f);
+        }
     }
 
     private void Move(Vector2Int direction)
@@ -86,6 +90,7 @@ public class PlayerMovement : MonoBehaviour
         transform.LookAt(new Vector3(targetHex.worldPosition.x, transform.position.y, targetHex.worldPosition.z));
         StartCoroutine(MoveToHex(new Vector3(targetHex.worldPosition.x, transform.position.y, targetHex.worldPosition.z), moveTime));
         hexGridManager.CheckIfNewGridNeeded(targetHex);
+
         if (standingCoroutine != null)
         {
             StopCoroutine(standingCoroutine);
@@ -95,7 +100,8 @@ public class PlayerMovement : MonoBehaviour
 
     public void ChangeAnimation(string newAnimation)
     {
-        if (currentAnimation == newAnimation) return;
+        if (currentAnimation == newAnimation) return; 
+        if (newAnimation == "Idle") canMove = true;
 
         currentAnimation = newAnimation;
         animator.Play(newAnimation);
@@ -108,10 +114,6 @@ public class PlayerMovement : MonoBehaviour
         if (canMove)
         {
             ChangeAnimation("Idle");
-        }
-        else
-        {
-            ChangeAnimation("Jump");
         }
     }
 
@@ -142,6 +144,7 @@ public class PlayerMovement : MonoBehaviour
         Vector3 startPosition = transform.position;
         float elapsed = 0f;
 
+        ChangeAnimation("Jump");
         while (elapsed < duration)
         {
             transform.position = Vector3.Lerp(startPosition, targetPosition, elapsed / duration);
@@ -150,7 +153,7 @@ public class PlayerMovement : MonoBehaviour
         }
 
         transform.position = targetPosition;
-        canMove = true;
+        
     }
 
     void OnDisable()
