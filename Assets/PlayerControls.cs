@@ -144,6 +144,15 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""SpecialMove"",
+                    ""type"": ""Button"",
+                    ""id"": ""f4c15653-08e3-4c29-9127-df8bdbba4286"",
+                    ""expectedControlType"": """",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": true
                 }
             ],
             ""bindings"": [
@@ -212,6 +221,17 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
                     ""action"": ""UpperLeft"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""55183b32-a173-4683-a331-804f7d30b4ba"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""SpecialMove"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -226,6 +246,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         m_Gameplay_Down = m_Gameplay.FindAction("Down", throwIfNotFound: true);
         m_Gameplay_LowerLeft = m_Gameplay.FindAction("LowerLeft", throwIfNotFound: true);
         m_Gameplay_UpperLeft = m_Gameplay.FindAction("UpperLeft", throwIfNotFound: true);
+        m_Gameplay_SpecialMove = m_Gameplay.FindAction("SpecialMove", throwIfNotFound: true);
     }
 
     ~@PlayerControls()
@@ -312,6 +333,7 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
     private readonly InputAction m_Gameplay_Down;
     private readonly InputAction m_Gameplay_LowerLeft;
     private readonly InputAction m_Gameplay_UpperLeft;
+    private readonly InputAction m_Gameplay_SpecialMove;
     /// <summary>
     /// Provides access to input actions defined in input action map "Gameplay".
     /// </summary>
@@ -347,6 +369,10 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         /// Provides access to the underlying input action "Gameplay/UpperLeft".
         /// </summary>
         public InputAction @UpperLeft => m_Wrapper.m_Gameplay_UpperLeft;
+        /// <summary>
+        /// Provides access to the underlying input action "Gameplay/SpecialMove".
+        /// </summary>
+        public InputAction @SpecialMove => m_Wrapper.m_Gameplay_SpecialMove;
         /// <summary>
         /// Provides access to the underlying input action map instance.
         /// </summary>
@@ -391,6 +417,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @UpperLeft.started += instance.OnUpperLeft;
             @UpperLeft.performed += instance.OnUpperLeft;
             @UpperLeft.canceled += instance.OnUpperLeft;
+            @SpecialMove.started += instance.OnSpecialMove;
+            @SpecialMove.performed += instance.OnSpecialMove;
+            @SpecialMove.canceled += instance.OnSpecialMove;
         }
 
         /// <summary>
@@ -420,6 +449,9 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
             @UpperLeft.started -= instance.OnUpperLeft;
             @UpperLeft.performed -= instance.OnUpperLeft;
             @UpperLeft.canceled -= instance.OnUpperLeft;
+            @SpecialMove.started -= instance.OnSpecialMove;
+            @SpecialMove.performed -= instance.OnSpecialMove;
+            @SpecialMove.canceled -= instance.OnSpecialMove;
         }
 
         /// <summary>
@@ -502,5 +534,12 @@ public partial class @PlayerControls: IInputActionCollection2, IDisposable
         /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
         /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
         void OnUpperLeft(InputAction.CallbackContext context);
+        /// <summary>
+        /// Method invoked when associated input action "SpecialMove" is either <see cref="UnityEngine.InputSystem.InputAction.started" />, <see cref="UnityEngine.InputSystem.InputAction.performed" /> or <see cref="UnityEngine.InputSystem.InputAction.canceled" />.
+        /// </summary>
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.started" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.performed" />
+        /// <seealso cref="UnityEngine.InputSystem.InputAction.canceled" />
+        void OnSpecialMove(InputAction.CallbackContext context);
     }
 }

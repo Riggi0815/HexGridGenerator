@@ -12,6 +12,8 @@ public class PlayerMovement : MonoBehaviour
     private bool firstMoveDone = false;
     public bool FirstMoveDone => firstMoveDone;
 
+    private bool specialMoveActive = false;
+
     private PlayerControls playerControls;
     private HexGridManager hexGridManager;
     private HexColorManager hexColorManager;
@@ -38,6 +40,7 @@ public class PlayerMovement : MonoBehaviour
         playerControls.Gameplay.Down.performed += ctx => Move(new Vector2Int(0, -1));
         playerControls.Gameplay.UpperLeft.performed += ctx => Move(new Vector2Int(-1, 0));
         playerControls.Gameplay.LowerLeft.performed += ctx => Move(new Vector2Int(-1, -1));
+        playerControls.Gameplay.SpecialMove.performed += ctx => specialMoveActive = true;
     }
 
     public void ChangeAnimationSpeed()
@@ -62,24 +65,32 @@ public class PlayerMovement : MonoBehaviour
         if (!canMove) return;
 
         canMove = false;
+        if (specialMoveActive)
+        {
+            direction = SpecialMove(direction);
+        }
         //even to odd Row Move
-        if (currentHexTile.hexCoordinates.y % 2 != 0 && direction.x != 0)
+        else if (currentHexTile.hexCoordinates.y % 2 != 0 && direction.x != 0)
         {
             direction.y += 1;
         }
 
         //Move Player
         Vector3Int targetHexTile = currentHexTile.hexCoordinates + new Vector3Int(0, direction.x, direction.y);
+
+        //Go to new Hex Grid
         if (targetHexTile.z > 9)
         {
-            targetHexTile.z = 0;
+            targetHexTile.z = targetHexTile.z - 10;
             targetHexTile.x += 1;
         }
         else if (targetHexTile.z < 0)
         {
-            targetHexTile.z = 9;
+            targetHexTile.z = targetHexTile.z + 10;
             targetHexTile.x -= 1;
         }
+
+
         HexTileInfo targetHex = hexGridManager.GetHexTileFromHexCoords(targetHexTile.x, targetHexTile.y, targetHexTile.z);
         if (targetHex == null)
         {
@@ -90,7 +101,7 @@ public class PlayerMovement : MonoBehaviour
         transform.LookAt(new Vector3(targetHex.worldPosition.x, transform.position.y, targetHex.worldPosition.z));
         StartCoroutine(MoveToHex(new Vector3(targetHex.worldPosition.x, transform.position.y, targetHex.worldPosition.z), moveTime));
         hexGridManager.CheckIfNewGridNeeded(targetHex);
-
+        if (specialMoveActive) specialMoveActive = false;
         if (standingCoroutine != null)
         {
             StopCoroutine(standingCoroutine);
@@ -98,14 +109,45 @@ public class PlayerMovement : MonoBehaviour
         standingCoroutine = StartCoroutine(PlayerStandingOnHex());
     }
 
+    private Vector2Int SpecialMove(Vector2Int direction)
+    {
+        
+        if (direction == new Vector2Int(0, 1)) // Up
+        {
+            direction = new Vector2Int(0, 2);
+        }
+        else if (direction == new Vector2Int(1, 0)) // Upper Right
+        {
+            direction = new Vector2Int(2, 1);
+        }
+        else if (direction == new Vector2Int(1, -1)) // Lower Right
+        {
+            direction = new Vector2Int(2, -1);
+        }
+        else if (direction == new Vector2Int(0, -1)) // Down
+        {
+            direction = new Vector2Int(0, -2);
+        }
+        else if (direction == new Vector2Int(-1, 0)) // Upper Left
+        {
+            direction = new Vector2Int(-2, 1);
+        }
+        else if (direction == new Vector2Int(-1, -1)) // Lower Left
+        {
+            direction = new Vector2Int(-2, -1);
+        }
+
+        return direction;
+    }
+
     public void ChangeAnimation(string newAnimation)
     {
-        if (currentAnimation == newAnimation) return; 
+        if (currentAnimation == newAnimation) return;
         if (newAnimation == "Idle") canMove = true;
 
         currentAnimation = newAnimation;
         animator.Play(newAnimation);
-        
+
     }
 
     private void CheckAnimation()
@@ -166,6 +208,7 @@ public class PlayerMovement : MonoBehaviour
         playerControls.Gameplay.Down.performed -= ctx => Move(new Vector2Int(0, -1));
         playerControls.Gameplay.UpperLeft.performed -= ctx => Move(new Vector2Int(-1, 0));
         playerControls.Gameplay.LowerLeft.performed -= ctx => Move(new Vector2Int(-1, -1));
+        playerControls.Gameplay.SpecialMove.performed -= ctx => specialMoveActive = false;
     }
 
     private void ColorCheck()
